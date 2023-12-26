@@ -1,113 +1,85 @@
-<template>
-  <div id="app">
-    <h1>Text Replacer</h1>
-    <div class="container">
-      <div class="input">
-        <h2>Input</h2>
-        <textarea v-model="input" placeholder="Enter your text here"></textarea>
-      </div>
-      <div class="output">
-        <h2>Output</h2>
-        <textarea v-model="output" readonly></textarea>
-      </div>
-    </div>
-    <div class="options">
-      <label for="find">Find:</label>
-      <input id="find" v-model="find" placeholder="Enter the text to find">
-      <label for="replace">Replace with:</label>
-      <input id="replace" v-model="replace" placeholder="Enter the text to replace with">
-    </div>
-  </div>
-</template>
-
-<script>
-import { ref, computed, watch } from 'vue'
-
-export default {
-  setup() {
-    // Define the reactive data
-    const input = ref('') // The input text
-    const output = ref('') // The output text
-    const find = ref('') // The text to find
-    const replace = ref('') // The text to replace with
-
-    // Define the computed property that returns the replaced text
-    const replaced = computed(() => {
-      // If the find text is empty, return the input text
-      if (!find.value) return input.value
-      // Otherwise, use a regular expression to replace all occurrences of the find text with the replace text
-      // and wrap the replaced text with <mark> tags to highlight it
-      const regex = new RegExp(find.value, 'g')
-      return input.value.replace(regex, `<mark>${replace.value}</mark>`)
-    })
-
-    // Define the watcher that updates the output text when the replaced text changes
-    watch(replaced, (newValue) => {
-      // Set the output text to the replaced text
-      output.value = newValue
-      // Get the output textarea element
-      const outputElement = document.querySelector('.output textarea')
-      // Set the inner HTML of the output textarea element to the replaced text
-      // This allows the <mark> tags to be rendered as HTML
-      outputElement.innerHTML = newValue
-    })
-
-    // Return the data and the computed property to the template
-    return {
-      input,
-      output,
-      find,
-      replace,
-      replaced
-    }
-  }
-}
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
 </script>
 
-<style>
-  /* Define some basic styles for the web page */
-  #app {
-    width: 800px;
-    margin: 0 auto;
-  }
+<template>
+  <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-  .container {
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
+</template>
+
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
     display: flex;
-    justify-content: space-between;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
   }
 
-  .input, .output {
-    width: 48%;
+  .logo {
+    margin: 0 2rem 0 0;
   }
 
-  textarea {
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-    font-size: 16px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-
-  .options {
+  header .wrapper {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    place-items: flex-start;
+    flex-wrap: wrap;
   }
 
-  label {
-    font-weight: bold;
-  }
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
 
-  input {
-    width: 200px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    padding: 1rem 0;
+    margin-top: 1rem;
   }
-
-  mark {
-    background-color: yellow;
-  }
+}
 </style>
